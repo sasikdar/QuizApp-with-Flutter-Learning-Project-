@@ -16,24 +16,28 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<StatefulWidget> {
   var questionIndex = 0;
   var answerIndex = 0;
-  List<String> _questions = [
-    'What is your favourite colour?',
-    'What is your favourite animal?'
+  var _questions = [
+    {
+      "question": 'What is your favourite colour?',
+      'answer': ['Yellow', 'Red', 'blue'],
+    },
+    {
+      'question': 'What is your favourite animal?',
+      'answer': ['Parrot', 'Dog', 'Fish']
+    }
   ];
   void generateQuestionAnswers() {
     setState(() {
-      if (questionIndex < 2 && answerIndex < 2) {
+      if (questionIndex < 1 && answerIndex < 1) {
         questionIndex = questionIndex + 1;
         answerIndex = answerIndex + 1;
-      } else
-        print('fuck off');
+      } else {
+        questionIndex = 0;
+        answerIndex = 0;
+      }
     });
   }
 
-  List<List<String>> _answers = [
-    ['Yellow', 'Red', 'blue'],
-    ['Parrot', 'Dog', 'Fish']
-  ];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,16 +47,11 @@ class MyAppState extends State<StatefulWidget> {
             ),
             body: Column(
               children: <Widget>[
-                Questions(_questions[questionIndex]),
-                RaisedButton(
-                    onPressed: generateQuestionAnswers,
-                    child: Answers(_answers[answerIndex][0])),
-                RaisedButton(
-                    onPressed: generateQuestionAnswers,
-                    child: Answers(_answers[answerIndex][1])),
-                RaisedButton(
-                    onPressed: generateQuestionAnswers,
-                    child: Answers(_answers[answerIndex][2]))
+                Questions(_questions[questionIndex]['question']),
+                ...(_questions[questionIndex]['answer'] as List<String>)
+                    .map((temper) {
+                  return Answers(generateQuestionAnswers, temper);
+                }).toList()
               ],
             )));
   }
